@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thrinath | Data Analytics Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-green: #00FF41;
+            --matrix-green: #0D0208;
+            --dark-bg: #000;
+            --glass-bg: rgba(0, 0, 0, 0.7);
+            --glow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green);
+            --text-glow: 0 0 3px rgba(0, 255, 65, 0.7);
+            --container-max: 70rem;
+            --section-padding: 5vw 0;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        *, *::before, *::after { 
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        #matrix-canvas {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.22;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 4vw;
+            width: 100%;
+        }
+        
+        section { 
+            padding: var(--section-padding); 
+        }
+        
+        header {
+            width: 100%;
+            position: fixed;
+            top: 0; 
+            left: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.7);
+            border-bottom: 1px solid rgba(0,255,65,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 3.5rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            text-decoration: none;
+            letter-spacing: 0.2em;
+            text-shadow: var(--glow);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-green);
+            text-shadow: var(--glow);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -0.3em;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-green);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after { 
+            width: 100%; 
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            color: var(--neon-green);
+            font-size: 2rem;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 4.5rem;
+        }
+        
+        .hero-content { 
+            max-width: 40rem; 
+            margin: 0 auto; 
+        }
+        
+        .terminal {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--neon-green);
+            border-radius: 0.5rem;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            box-shadow: var(--glow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 0.7rem;
+            left: 1rem;
+        }
+        
+        .terminal-btn {
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 50%;
+            margin-right: 0.3rem;
+        }
+        
+        .btn-red { background: #ff5f56; }
+        .btn-yellow { background: #ffbd2e; }
+        .btn-green { background: #27c93f; }
+        
+        .terminal-body { 
+            margin-top: 2rem; 
+            text-align: left; 
+        }
+        
+        .terminal-text {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--neon-green);
+            text-shadow: var(--text-glow);
+            word-break: break-word;
+        }
+        
+        .terminal-subtext {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-top: 1rem;
+            display: inline-block;
+            text-shadow: var(--text-glow);
+        }
+        
+        .glitch {
+            animation: glitch-anim 2s infinite;
+        }
+        
+        @keyframes glitch-anim {
+            0% { text-shadow: 0 0 5px var(--neon-green); }
+            25% { transform: translate(2px, 0); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(-2px, 0); }
+            100% { text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green); }
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: var(--neon-green);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            text-shadow: var(--glow);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5em;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5rem;
+            height: 2px;
+            background: var(--neon-green);
+            box-shadow: var(--glow);
+        }
+        
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,255,65,0.3);
+            border-radius: 0.7rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.25rem 1rem rgba(0,0,0,0.5), var(--glow);
+            color: #ddd;
+            font-size: 1rem;
+            text-shadow: var(--text-glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--neon-green);
+        }
+        
+        .about-content { 
+            font-size: 1.1rem; 
+            line-height: 1.7; 
+        }
+        
+        /* Experience & Education Card Styles */
+        .exp-list, .edu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+        
+        .exp-card, .edu-card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(0,255,65,0.18);
+            border-radius: 0.7rem;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 0.15rem 0.6rem rgba(0,0,0,0.3), var(--glow);
+            color: #ddd;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .exp-card:hover, .edu-card:hover {
+            transform: translateY(-0.2rem) scale(1.01);
+            box-shadow: 0 0.4rem 1.5rem rgba(0,0,0,0.4), 0 0 0.7rem var(--neon-green);
+        }
+        
+        .exp-header, .edu-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.6rem;
+        }
+        
+        .exp-icon, .edu-icon {
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+            text-shadow: var(--glow);
+        }
+        
+        .exp-role, .edu-degree {
+            font-size: 1.1rem;
+            color: var(--neon-green);
+            margin-bottom: 0.1rem;
+            text-shadow: var(--glow);
+        }
+        
+        .exp-date, .edu-date {
+            font-size: 0.98rem;
+            color: #aaa;
+            margin-bottom: 0.1rem;
+            text-shadow: var(--text-glow);
+        }
+        
+        .exp-details, .edu-details {
+            margin: 0 0 0 1.1em;
+            padding: 0 0 0 1em;
+            font-size: 0.98em;
+        }
+        
+        /* Skills Section */
+        .skills-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0 0 0;
+        }
+        
+        .skills-category-card {
+            background: linear-gradient(120deg, rgba(0,255,65,0.06) 0%, rgba(0,0,0,0.92) 100%);
+            border: 1.5px solid var(--neon-green);
+            border-radius: 0.8rem;
+            box-shadow: 0 0.13rem 1rem rgba(0,255,65,0.08), 0 0 0.5rem var(--neon-green);
+            padding: 1.5rem 1rem 1rem 1rem;
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skills-category-card:hover {
+            transform: translateY(-0.3rem) scale(1.02);
+            box-shadow: 0 0.5rem 2rem rgba(0,255,65,0.15), 0 0 1rem var(--neon-green);
+        }
+        
+        .skills-category-title {
+            font-size: 1.1rem;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-shadow: var(--glow);
+            letter-spacing: 0.05em;
+        }
+        
+        .skills-category-title .skill-icon {
+            font-size: 1.2em;
+            color: var(--neon-green);
+            filter: drop-shadow(0 0 0.4rem var(--neon-green)) brightness(1.1);
+            background: rgba(0,0,0,0.65);
+            border-radius: 50%;
+            padding: 0.4rem;
+            transition: filter 0.2s, color 0.2s, background 0.2s;
+        }
+        
+        .skills-category-card:hover .skill-icon {
+            color: #fff;
+            filter: drop-shadow(0 0 0.8rem var(--neon-green)) brightness(1.2);
+            background: rgba(0,0,0,0.85);
+        }
+        
+        .skills-category-card .skills-container {
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: flex-start;
+            margin-top: 0;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .skill-badge {
+            background: rgba(0,255,65,0.1);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 0.4em 0.9em;
+            border-radius: 1.2em;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-shadow: var(--text-glow);
+        }
+        
+        .skill-badge:hover {
+            background: var(--neon-green);
+            color: #000;
+            transform: translateY(-0.15em);
+            box-shadow: var(--glow);
+        }
+        
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .project-card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(0,255,65,0.2);
+            border-radius: 0.7rem;
+            padding: 1.2rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100%;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: var(--glow);
+            border-color: var(--neon-green);
+        }
+        
+        .project-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        
+        .project-icon {
+            font-size: 2rem;
+            color: var(--neon-green);
+            text-shadow: var(--glow);
+            flex-shrink: 0;
+        }
+        
+        .project-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: var(--neon-green);
+            text-shadow: var(--glow);
+        }
+        
+        .featured-project {
+            text-shadow: 0 0 2.5px var(--neon-green), 0 0 5px var(--neon-green), 0 0 8px var(--neon-green);
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { text-shadow: 0 0 2.5px var(--neon-green), 0 0 5px var(--neon-green); }
+            to { text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 15px var(--neon-green); }
+        }
+        
+        .project-subtitle {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 0.7rem;
+            text-shadow: var(--text-glow);
+        }
+        
+        .project-details {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            text-shadow: var(--text-glow);
+            font-size: 0.98rem;
+            flex-grow: 1;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        
+        .tech-badge {
+            background: rgba(0,255,65,0.1);
+            color: var(--neon-green);
+            padding: 0.2em 0.7em;
+            border-radius: 0.4em;
+            font-size: 0.85rem;
+            text-shadow: var(--text-glow);
+        }
+        
+        .project-image {
+            width: 100%;
+            aspect-ratio: 16/7;
+            background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,0,0,0.8));
+            border-radius: 0.5rem;
+            margin-top: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: 1.5rem 1.5rem;
+            opacity: 0.3;
+        }
+        
+        .project-image i {
+            font-size: 2.2rem;
+            color: rgba(0,255,65,0.3);
+            z-index: 1;
+        }
+        
+        /* Contact Section */
+        .contact-container { 
+            max-width: 36rem; 
+            margin: 0 auto; 
+        }
+        
+        .contact-info {
+            background: var(--glass-bg);
+            border: 1px solid rgba(0,255,65,0.3);
+            border-radius: 0.7rem;
+            padding: 2rem 1rem;
+            box-shadow: 0 0 4px var(--neon-green);
+            text-align: center;
+        }
+        
+        .contact-heading.neon-glow {
+            font-size: 1.3rem;
+            color: var(--neon-green);
+            text-align: center;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 3px var(--neon-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            border-bottom: none;
+            padding-bottom: 0;
+            background: none;
+            border-radius: 0;
+        }
+        
+        .contact-icons-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .contact-icon-card {
+            background: rgba(0,0,0,0.85);
+            border: 1.5px solid var(--neon-green);
+            border-radius: 0.8rem;
+            box-shadow: 0 0 6px rgba(0,255,65,0.08), 0 0 3px var(--neon-green);
+            padding: 1.2rem 1rem 0.8rem 1rem;
+            min-width: 4.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-icon-card:hover {
+            transform: translateY(-0.3rem) scale(1.03);
+            box-shadow: 0 0.5rem 1rem rgba(0,255,65,0.12), 0 0 6px var(--neon-green);
+            border-color: #fff;
+        }
+        
+        .icon-circle {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, rgba(0,255,65,0.12) 0%, rgba(0,0,0,0.85) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0;
+            box-shadow: 0 0 6px var(--neon-green), 0 0 1px #fff;
+            border: 2px solid var(--neon-green);
+            transition: background 0.2s, box-shadow 0.2s;
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 3px var(--neon-green);
+        }
+        
+        .contact-icon-card:hover .icon-circle {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-green), 0 0 2px #fff;
+        }
+        
+        .icon-circle a {
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+        
+        .icon-circle a:hover {
+            color: #000;
+            text-shadow: 0 0 4px var(--neon-green);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0 1rem 0;
+            border-top: 1px solid rgba(0,255,65,0.2);
+            color: #aaa;
+            font-size: 0.95rem;
+            text-shadow: var(--text-glow);
+            background: transparent;
+        }
+        
+        /* Loading screen styles */
+        #loading-screen {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-green);
+            overflow: hidden;
+            transition: opacity 1s;
+        }
+        
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #loading-text {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 10px var(--neon-green),
+                         0 0 20px var(--neon-green),
+                         0 0 40px var(--neon-green);
+            animation: textGlitch 2s infinite;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(0,255,65,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #loading-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--neon-green);
+            box-shadow: 0 0 20px var(--neon-green);
+            animation: loadProgress 2s ease-in-out forwards;
+        }
+        
+        #loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            animation: shimmer 1s infinite;
+        }
+        
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+        
+        /* Animation classes */
+        .animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 3.5rem;
+                left: 0;
+                width: 100%;
+                background: rgba(0,0,0,0.9);
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                gap: 1.5rem;
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: clip-path 0.4s ease;
+            }
+            
+            .nav-links.active {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .terminal-text {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <div id="loading-text" class="glitch-text">PORTFOLIO INITIALIZATION</div>
+  
+  <div class="matrix-rain" aria-hidden="true">
+    <span>1</span><span>0</span><span>1</span><span>0</span>
+  </div>
+  
+  <div class="loading-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div id="loading-bar"></div>
+  </div>
+  
+  <div class="loading-status">
+    <span class="blink">&gt; PORTFOLIO STATUS: </span>
+    <span id="status-text">LOADING...</span>
+  </div>
+  
+  <div class="matrix-code">
+    <pre id="matrix-code-text"></pre>
+  </div>
+</div>
+
+<style>
+  #loading-screen {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .glitch-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #0f0;
+    position: relative;
+    animation: glitch 1.5s infinite;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes glitch {
+    0% {
+      text-shadow: 2px 0 #0f0, -2px 0 #0f0;
+    }
+    20% {
+      text-shadow: 2px 2px #0f0, -2px -2px #0f0;
+    }
+    40% {
+      text-shadow: 0 2px #0f0, 0 -2px #0f0;
+    }
+    60% {
+      text-shadow: 2px -2px #0f0, -2px 2px #0f0;
+    }
+    80% {
+      text-shadow: 2px 0 #0f0, -2px 0 #0f0;
+    }
+    100% {
+      text-shadow: 0 0 transparent;
+    }
+  }
+  
+  .matrix-rain {
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+  }
+  
+  .loading-bar-container {
+    width: 70%;
+    height: 15px;
+    border: 1px solid #0f0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: #001100;
+    overflow: hidden;
+  }
+  
+  #loading-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #00ff00, #008000);
+    transition: width 0.3s ease;
+  }
+  
+  .loading-status {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .blink {
+    animation: blink 1.2s steps(1) infinite;
+    color: #0f0;
+  }
+  
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  .matrix-code {
+    width: 70%;
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    color: #0f0;
+    background: #001100dd;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+  }
+</style>
+
+<script>
+  const loadingSteps = [
+    "LOADING PORTFOLIO COMPONENTS...",
+    "INITIALIZING PROJECTS DATA...",
+    "CONFIGURING SKILLS SECTION...",
+    "STARTING EXPERIENCE TIMELINE...",
+    "VERIFYING EDUCATION DETAILS...",
+    "PERFORMING CONTENT CHECKS...",
+    "LOADING PORTFOLIO UI...",
+    "OPTIMIZING PORTFOLIO DISPLAY...",
+    "FINALIZING SETUP...",
+    "READY TO LAUNCH!"
+  ];
+
+  const loadingBar = document.getElementById('loading-bar');
+  const statusText = document.getElementById('status-text');
+  const matrixCodeText = document.getElementById('matrix-code-text');
+  const loadingScreen = document.getElementById('loading-screen');
+
+  let step = 0;
+  let progress = 0;
+
+  function updateLoading() {
+    if (step < loadingSteps.length) {
+      statusText.textContent = loadingSteps[step];
+      matrixCodeText.textContent += "> " + loadingSteps[step] + "\n";
+      step++;
+      progress = (step / loadingSteps.length) * 100;
+      loadingBar.style.width = progress + '%';
+    } else {
+      clearInterval(loadingInterval);
+      // Fade out loading screen
+      loadingScreen.style.transition = "opacity 1s ease";
+      loadingScreen.style.opacity = 0;
+      setTimeout(() => loadingScreen.style.display = 'none', 1000);
+    }
+  }
+
+  const loadingInterval = setInterval(updateLoading, 700);
+</script>
+
+    <!-- Matrix Background -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <!-- Header -->
+    <header>
+    <div class="container">
+        <nav>
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">TRY<span class="blinking-underscore">_</span></h2>
+            <div class="nav-links" id="navLinks">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </div>
+    <style>
+        .blinking-underscore {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-btn btn-red"></span>
+                        <span class="terminal-btn btn-yellow"></span>
+                        <span class="terminal-btn btn-green"></span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-text" id="terminal-text"></div>
+                        <div class="terminal-subtext glitch">Data Analytics | ETL Engineering | Cloud Automation | ML Modeling</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">ABOUT ME</h2>
+            <div class="glass-card animate">
+                <div class="about-content">
+                    Data Analytics professional with 4+ years of experience building predictive models, automating ETL workflows, and driving business impact across Fortune 500 clients. Proven ability to boost customer retention, reduce processing times, and deliver real-time dashboards. Skilled in Python, SQL, Power BI, Airflow, dbt, and cloud platforms including AWS, Azure, and BigQuery.
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">EXPERIENCE</h2>
+            <div class="exp-list">
+                <!-- Specialist Programmer -->
+                <div class="exp-card animate">
+                    <div class="exp-header">
+                        <i class="fas fa-user-secret exp-icon"></i>
+                        <div>
+                            <div class="exp-role">Specialist Programmer</div>
+                            <div class="exp-date">Infosys Ltd – Hyderabad, India<br>Nov 2020 – Jul 2023</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 0.5em; color:#aaa;"><b>Challenge:</b> High customer churn and lack of actionable retention analytics for a retail client in the U.S.</div>
+                    <div style="margin-bottom: 0.3em;"><b>Solutions & Actions:</b></div>
+                    <ul class="exp-details">
+                        <li>Analyzed 1M+ customer records to extract KPIs like RFM and discount dependency using SQL & Python.</li>
+                        <li>Developed predictive churn models (Logistic Regression, Random Forest) with 85% accuracy using Scikit-learn.</li>
+                        <li>Designed Power BI dashboards showing churn trends by age, region, and behavior for marketing teams.</li>
+                        <li>Automated daily ETL workflows with Apache Airflow and dbt on Google BigQuery.</li>
+                    </ul>
+                    <div style="margin-top: 0.4em; margin-bottom: 0.1em;"><b>Results:</b></div>
+                    <ul class="exp-details">
+                        <li><span style="color:var(--neon-green);">✅ Achieved a 9% improvement in Q2 customer retention</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Boosted ROI of personalized campaigns through high-risk customer targeting</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Reduced manual intervention and enabled real-time scoring pipelines</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Systems Engineer -->
+                <div class="exp-card animate delay-1">
+                    <div class="exp-header">
+                        <i class="fas fa-chart-bar exp-icon"></i>
+                        <div>
+                            <div class="exp-role">Systems Engineer</div>
+                            <div class="exp-date">Infosys Ltd – Hyderabad, India<br>May 2020 – Nov 2020</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 0.5em; color:#aaa;"><b>Challenge:</b> Slow and inefficient data processing across pipelines and compliance-heavy payment systems</div>
+                    <div style="margin-bottom: 0.3em;"><b>Solutions & Actions:</b></div>
+                    <ul class="exp-details">
+                        <li>Built and optimized data pipelines using Azure Data Factory and Databricks notebooks.</li>
+                        <li>Implemented secure payment workflows aligned with compliance standards.</li>
+                        <li>Wrote advanced SQL (DDL/DML) scripts to transform large datasets efficiently.</li>
+                        <li>Enabled CI/CD deployment via Azure DevOps, improving multi-environment delivery.</li>
+                    </ul>
+                    <div style="margin-top: 0.4em; margin-bottom: 0.1em;"><b>Results:</b></div>
+                    <ul class="exp-details">
+                        <li><span style="color:var(--neon-green);">✅ Improved data pipeline performance with a 12% reduction in query execution time</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Ensured end-to-end compliance in sensitive financial workflows</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Supported smooth release cycles and production stability</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Campus Data & Engagement Coordinator -->
+                <div class="exp-card animate delay-2">
+                    <div class="exp-header">
+                        <i class="fas fa-database exp-icon"></i>
+                        <div>
+                            <div class="exp-role">Campus Data & Engagement Coordinator</div>
+                            <div class="exp-date">Internshala – Remote<br>Jun 2019 – May 2020</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 0.5em; color:#aaa;"><b>Challenge:</b> Low student participation in internship programs across campus</div>
+                    <div style="margin-bottom: 0.3em;"><b>Solutions & Actions:</b></div>
+                    <ul class="exp-details">
+                        <li>Designed engagement campaigns based on student data and feedback loops.</li>
+                        <li>Built Excel dashboards to track participation trends and optimize strategies.</li>
+                        <li>Launched domain-based internship recommendations (e.g., Web Dev, Data Analytics, Marketing).</li>
+                        <li>Automated campaign feedback collection using Google Apps Script.</li>
+                        <li>Created a Python-based Gmail auto-responder to handle FAQs from students.</li>
+                    </ul>
+                    <div style="margin-top: 0.4em; margin-bottom: 0.1em;"><b>Results:</b></div>
+                    <ul class="exp-details">
+                        <li><span style="color:var(--neon-green);">✅ Increased student engagement by 8% within 3 months</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Enabled targeted internship matching and improved campaign efficiency</span></li>
+                        <li><span style="color:var(--neon-green);">✅ Reduced support workload via automated FAQ handling</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Education Section -->
+    <section id="education">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">EDUCATION</h2>
+            <div class="edu-list">
+                <div class="edu-card animate delay-3">
+                    <div class="edu-header">
+                        <i class="fas fa-graduation-cap edu-icon" style="filter: brightness(0.8); text-shadow: none;"></i>
+                        <div>
+                            <div class="edu-degree" style="text-shadow: none; color: #fff;">MS in Data Analytics, Clark University</div>
+                            <div class="edu-date">May 2025</div>
+                        </div>
+                    </div>
+                    <ul class="edu-details">
+                        <li>Advanced coursework in ML, big data, and BI.</li>
+                        <li>Projects: Churn Prediction, NLP, Cloud ETL.</li>
+                    </ul>
+                </div>
+                
+                <div class="edu-card animate delay-4">
+                    <div class="edu-header">
+                        <i class="fas fa-university edu-icon" style="filter: brightness(0.8); text-shadow: none;"></i>
+                        <div>
+                            <div class="edu-degree" style="text-shadow: none; color: #fff;">B.Tech in Computer Science, Sreenidhi Institute of Science & Technology</div>
+                            <div class="edu-date">May 2021</div>
+                        </div>
+                    </div>
+                    <ul class="edu-details">
+                        <li>Specialized in data structures, algorithms, and DBMS.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">SKILLS</h2>
+            <div class="skills-categories">
+                <div class="skills-category-card animate">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-code skill-icon" style="filter: brightness(0.8);"></i> <span>Programming Languages</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">SQL</span>
+                        <span class="skill-badge">R</span>
+                        <span class="skill-badge">JavaScript</span>
+                        <span class="skill-badge">TypeScript</span>
+                        <span class="skill-badge">HTML/CSS</span>
+                        <span class="skill-badge">.NET</span>
+                    </div>
+                </div>
+                
+                <div class="skills-category-card animate delay-1">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-brain skill-icon" style="filter: brightness(0.8);"></i> <span>Data Science & ML</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Pandas</span>
+                        <span class="skill-badge">NumPy</span>
+                        <span class="skill-badge">Scikit-learn</span>
+                        <span class="skill-badge">Matplotlib</span>
+                        <span class="skill-badge">Predictive Modeling</span>
+                    </div>
+                </div>
+                
+                <div class="skills-category-card animate delay-2">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-cloud skill-icon" style="filter: brightness(0.8);"></i> <span>Cloud & Data Engineering</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">AWS</span>
+                        <span class="skill-badge">Azure</span>
+                        <span class="skill-badge">Google BigQuery</span>
+                        <span class="skill-badge">Airflow</span>
+                        <span class="skill-badge">dbt</span>
+                        <span class="skill-badge">Docker</span>
+                    </div>
+                </div>
+                
+                <div class="skills-category-card animate delay-3">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-chart-bar skill-icon" style="filter: brightness(0.8);"></i> <span>BI & Visualization</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Power BI</span>
+                        <span class="skill-badge">Tableau</span>
+                    </div>
+                </div>
+                
+                <div class="skills-category-card animate delay-4">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-robot skill-icon" style="filter: brightness(0.8);"></i> <span>Web & Automation</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">FastAPI</span>
+                        <span class="skill-badge">ReactJS</span>
+                        <span class="skill-badge">Angular</span>
+                        <span class="skill-badge">Blue Prism</span>
+                    </div>
+                </div>
+                
+                <div class="skills-category-card animate delay-5">
+                    <div class="skills-category-title" style="text-shadow: none;">
+                        <i class="fas fa-tools skill-icon" style="filter: brightness(0.8);"></i> <span>Tools & Methodologies</span>
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Git</span>
+                        <span class="skill-badge">Agile</span>
+                        <span class="skill-badge">SCRUM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">PROJECTS</h2>
+            <div class="projects-grid">
+                <!-- Churn Prediction -->
+                <div class="project-card animate">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-chart-line"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Customer Churn Prediction</h3>
+                            <div class="project-subtitle">Predict. Retain. Optimize</div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Built ML models (Logistic Regression, Random Forest) to predict customer churn with <b>87% accuracy</b>. Delivered actionable insights to marketing, improving retention and campaign ROI.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">Scikit-learn</span>
+                        <span class="tech-badge">Pandas</span>
+                        <span class="tech-badge">ML</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+                
+                <!-- Sales Dashboard -->
+                <div class="project-card animate delay-1">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-chart-bar"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Sales Dashboard & Forecasting</h3>
+                            <div class="project-subtitle">
+                                <span class="highlight">Power BI</span> · Time Series Analysis
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Developed interactive dashboard with <b>real-time SQL integration</b> and <span class="highlight">ARIMA</span>-based forecasting. Enabled business users to track KPIs and predict sales trends.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Power BI</span>
+                        <span class="tech-badge">SQL</span>
+                        <span class="tech-badge">ARIMA</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                
+                <!-- Sentiment Analysis -->
+                <div class="project-card animate delay-2">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-comment-dots"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Social Media Sentiment Analysis</h3>
+                            <div class="project-subtitle">
+                                NLP · <span class="highlight">Twitter & Reddit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Built NLP pipeline to classify sentiment from thousands of social posts using <span class="highlight">SVM</span> and <span class="highlight">spaCy</span>. Visualized trends to inform brand strategy.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">spaCy</span>
+                        <span class="tech-badge">SVM</span>
+                        <span class="tech-badge">NLP</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+                
+                <!-- Airflow Data Pipeline -->
+                <div class="project-card animate delay-3">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-network-wired"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Airflow ETL Pipeline</h3>
+                            <div class="project-subtitle">
+                                <span class="highlight">AWS</span> · <span class="highlight">PostgreSQL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Designed automated ETL pipeline with <span class="highlight">Apache Airflow</span>, orchestrating data movement from PostgreSQL to AWS S3. Reduced manual effort and improved data freshness.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Airflow</span>
+                        <span class="tech-badge">PostgreSQL</span>
+                        <span class="tech-badge">AWS S3</span>
+                        <span class="tech-badge">ETL</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                </div>
+                
+                <!-- Traffic Signal Optimization -->
+                <div class="project-card animate delay-4">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-traffic-light"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Traffic Signal Optimization</h3>
+                            <div class="project-subtitle">
+                                <span class="highlight">Simulation</span> · ML Modeling
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Simulated urban traffic and applied <span class="highlight">ML</span> to optimize signal timings, achieving <b>22% reduction</b> in average wait time.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">Simulation</span>
+                        <span class="tech-badge">ML</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-car"></i>
+                    </div>
+                </div>
+                
+                <!-- Invoice Processing RPA -->
+                <div class="project-card animate delay-5">
+                    <div class="project-header">
+                        <div class="project-icon" style="filter: brightness(0.8); text-shadow: none;"><i class="fas fa-robot"></i></div>
+                        <div class="project-text">
+                            <h3 class="project-title" style="text-shadow: none; color: #fff;">Invoice Processing RPA</h3>
+                            <div class="project-subtitle">
+                                <span class="highlight">Blue Prism</span> · ERP Automation
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        Automated invoice processing with <span class="highlight">Blue Prism RPA</span>, reducing manual workload by <strong>70%</strong> and improving accuracy through intelligent document recognition.
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-badge">Blue Prism</span>
+                        <span class="tech-badge">RPA</span>
+                        <span class="tech-badge">ERP</span>
+                    </div>
+                    <div class="project-image">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title" style="text-shadow: 0 0 2px var(--neon-green);">CONTACT</h2>
+            <div class="contact-container">
+                <div class="contact-info animate">
+                    <div class="contact-icons-row">
+                        <div class="contact-icon-card">
+                            <div class="icon-circle">
+                                <a href="mailto:Thrinath.Yarramadha@gmail.com" class="contact-link" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="contact-icon-card">
+                            <div class="icon-circle">
+                                <a href="https://linkedin.com/in/trinathone/" target="_blank" class="contact-link" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="contact-icon-card">
+                            <div class="icon-circle">
+                                <a href="tel:+14015264823" class="contact-link" aria-label="Phone">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-heading neon-glow">
+                        <i class="fas fa-terminal"></i> <span>Let's Connect</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div>
+            <span style="color:var(--neon-green); font-weight:bold;">&copy; 2024 Thrinath Yarramadha</span> &mdash; Data Analytics Portfolio
+        </div>
+        <div style="margin-top:0.7em; font-style:italic; color:#fff; text-shadow:0 0 0.4em var(--neon-green);">
+            "Data is a precious thing and will last longer than the systems themselves." &mdash; Tim Berners-Lee
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script>
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loading-screen').classList.add('hidden');
+            }, 2000);
+        });
+        
+        // Matrix background animation
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        let matrixFontSize = 18;
+        let matrixColumns, matrixDrops, matrixChars;
+        
+        function resizeMatrixCanvas() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            matrixFontSize = Math.max(14, Math.floor(window.innerWidth / 60));
+            matrixColumns = Math.floor(matrixCanvas.width / matrixFontSize);
+            matrixDrops = Array.from({length: matrixColumns}, () => Math.random() * matrixCanvas.height / matrixFontSize);
+        }
+        
+        matrixChars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        window.addEventListener('resize', resizeMatrixCanvas);
+        resizeMatrixCanvas();
+        
+        let lastDraw = 0;
+        function drawMatrix(now) {
+            if (now - lastDraw < 45) { 
+                requestAnimationFrame(drawMatrix); 
+                return; 
+            }
+            lastDraw = now;
+            matrixCtx.fillStyle = 'rgba(0,0,0,0.08)';
+            matrixCtx.fillRect(0,0,matrixCanvas.width,matrixCanvas.height);
+            matrixCtx.font = matrixFontSize + "px 'Share Tech Mono', monospace";
+            
+            for (let i = 0; i < matrixDrops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillStyle = i % 10 === 0 ? '#fff' : 'rgba(0,255,65,0.7)';
+                matrixCtx.fillText(text, i * matrixFontSize, matrixDrops[i] * matrixFontSize);
+                
+                if (matrixDrops[i] * matrixFontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    matrixDrops[i] = 0;
+                }
+                matrixDrops[i]++;
+            }
+            requestAnimationFrame(drawMatrix);
+        }
+        requestAnimationFrame(drawMatrix);
+        
+        // Typewriter effect for hero terminal
+        const terminalText = document.getElementById('terminal-text');
+        const lines = [
+            "I am Thrinath — I transform raw data into <span style='color:var(--neon-green);'>powerful insights</span> that drive real-world decisions. <span class='emoji-anim'><i class='fas fa-lightbulb'></i></span>",
+            "Passionate about building intelligent systems with <span style='color:var(--neon-green);'>analytics <span class='emoji-anim'><i class='fas fa-chart-line'></i></span></span>, <span style='color:var(--neon-green);'>automation <span class='emoji-anim'><i class='fas fa-cogs'></i></span></span>, and <span style='color:var(--neon-green);'>machine learning <span class='emoji-anim'><i class='fas fa-brain'></i></span></span>."
+        ];
+
+        let line = 0, char = 0;
+        
+        // Emoji animation CSS
+        if(!document.getElementById('emoji-anim-style')) {
+            const style = document.createElement('style');
+            style.id = 'emoji-anim-style';
+            style.innerHTML = `
+                .emoji-anim {
+                    display: inline-block;
+                    animation: emoji-bounce 1.2s infinite alternate cubic-bezier(.5,1.8,.5,1.2);
+                    will-change: transform;
+                }
+                @keyframes emoji-bounce {
+                    0% { transform: translateY(0) scale(1);}
+                    60% { transform: translateY(-0.5em) scale(1.12);}
+                    100% { transform: translateY(0) scale(1);}
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function typeLine() {
+            if (line >= lines.length) return;
+            let current = lines[line];
+            if (char <= current.length) {
+                terminalText.innerHTML = lines.slice(0, line).join('<br>') +
+                    (line > 0 ? '<br>' : '') +
+                    current.slice(0, char) + '<span class="glitch" style="color:var(--neon-green);">|</span>';
+                char++;
+                setTimeout(typeLine, 28 + Math.random()*32);
+            } else {
+                terminalText.innerHTML = lines.slice(0, line+1).join('<br>');
+                line++;
+                char = 0;
+                setTimeout(typeLine, 6000);
+            }
+        }
+        typeLine();
+        
+        // Mobile nav toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        menuToggle.onclick = () => navLinks.classList.toggle('active');
+        
+        window.addEventListener('resize', () => {
+            if(window.innerWidth > 768) navLinks.classList.remove('active');
+        });
+        
+        // Scroll animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.animate');
+            
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top <= window.innerHeight - 50 && rect.bottom >= 0;
+                
+                if (isVisible) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', handleScrollAnimations);
+        handleScrollAnimations(); // Initialize on load
+    </script>
+</body>
+</html>
